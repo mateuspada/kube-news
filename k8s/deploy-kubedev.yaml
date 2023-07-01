@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: kubedev
+spec:
+  selector:
+    matchLabels:
+      app: kubedev
+  template:
+    metadata:
+      labels:
+        app: kubedev
+    spec:
+      containers:
+        - name: kubedev
+          image: mateuspada/kube-news:v1
+          ports: 
+          - containerPort: 8080
+          env:
+          - name: DB_DATABASE
+            value: "kubedevnews"
+          - name: DB_USERNAME
+            value: "kubedevnews"
+          - name: DB_PASSWORD
+            value: "Pg#123"
+          - name: DB_HOST
+            value: "kubedev-postgresql"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubedev
+spec:
+  type: NodePort
+  selector: 
+    app: kubedev
+  ports:
+  - port: 8080
+    nodePort: 30000
+
+  

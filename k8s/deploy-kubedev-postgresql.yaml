@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: kubedev-postgresql
+spec:
+  selector:
+    matchLabels:
+      app: kubedev-postgresql
+  template:
+    metadata:
+      labels:
+        app: kubedev-postgresql
+    spec:
+      containers:
+        - name: postgresql
+          image: postgres:15
+          ports: 
+          - containerPort: 5432
+          env:
+          - name: POSTGRES_DB
+            value: "kubedevnews"
+          - name: POSTGRES_USER
+            value: "kubedevnews"
+          - name: POSTGRES_PASSWORD
+            value: "Pg#123"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubedev-postgresql
+spec:
+  selector: 
+    app: kubedev-postgresql
+  ports:
+  - port: 5432
+  type: ClusterIP
