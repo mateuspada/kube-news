@@ -1,0 +1,27 @@
+name: CI/CD
+on: 
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Docker Login
+        uses: docker/login-action@v2.2.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USR }}
+          password: ${{ secrets.DOCKERHUB_PWD }}
+            
+      - name: Docker build & push
+        uses: docker/build-push-action@v4.1.1
+        with:
+          context: ./src
+          file: ./src/Dockerfile
+          push: true
+          tags: |
+            mateuspada/kube-news:v${{ github.run_number }}
+            mateuspada/kube-news:latest
